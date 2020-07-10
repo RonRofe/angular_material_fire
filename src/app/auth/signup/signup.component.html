@@ -1,5 +1,5 @@
 <section>
-    <form #f="ngForm" fxLayout="column" fxLayoutAlign="center center" (ngSubmit)="onSubmit(f)">
+    <form #f="ngForm" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" (ngSubmit)="onSubmit(f)">
         <mat-form-field>
             <input #emailInput="ngModel" matInput type="email" placeholder="Your email" ngModel name="email" email required>
             <mat-error *ngIf="emailInput.hasError('email')">Email is invalid.</mat-error>
@@ -16,6 +16,6 @@
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <mat-checkbox ngModel name="agree" required color="accent">Agree to terms and conditions.</mat-checkbox>
-        <button type="submit" mat-raised-button color="primary">Submit</button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="!f.valid">Submit</button>
     </form>
 </section>
