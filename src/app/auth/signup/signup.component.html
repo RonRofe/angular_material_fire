@@ -1,5 +1,5 @@
-<section class="container" fxLayoutAlign="center center">
-    <form #f="ngForm" fxLayout="column" (ngSubmit)="onSubmit(f)">
+<section>
+    <form #f="ngForm" fxLayout="column" fxLayoutAlign="center center" (ngSubmit)="onSubmit(f)">
         <mat-form-field>
             <input #emailInput="ngModel" matInput type="email" placeholder="Your email" ngModel name="email" email required>
             <mat-error *ngIf="emailInput.hasError('email')">Email is invalid.</mat-error>
@@ -11,10 +11,11 @@
             <mat-error>Has to be at least 6 characters long.</mat-error>
         </mat-form-field>
         <mat-form-field>
-            <input matInput [matDatepicker]="picker" placeholder="Your birthdate" [max]="maxDate">
+            <input ngModel name="birthDate" required matInput [matDatepicker]="picker" placeholder="Your birthdate" [max]="maxDate">
             <mat-datepicker-toggle [for]="picker" matSuffix ></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        <mat-checkbox ngModel name="agree" required color="accent">Agree to terms and conditions.</mat-checkbox>
         <button type="submit" mat-raised-button color="primary">Submit</button>
     </form>
 </section>
