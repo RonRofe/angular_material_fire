@@ -14,6 +14,8 @@ import { CurrentTrainingComponent } from './training/current-training/current-tr
 import { NewTrainingComponent } from './training/new-training/new-training.component';
 import { PastTrainingsComponent } from './training/past-trainings/past-trainings.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { HeaderComponent } from './navigation/header/header.component';
+import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
     NewTrainingComponent,
     PastTrainingsComponent,
     WelcomeComponent,
+    HeaderComponent,
+    SideNavListComponent,
   ],
   imports: [
     BrowserModule,
