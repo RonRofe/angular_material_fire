@@ -9,22 +9,3 @@ mat-sidenav-content {
 mat-sidenav {
     width: 250px;
 }
-
-a {
-    text-decoration: none;
-    color: white;
-    font-weight: 400;
-}
-
-a:hover, a:active {
-    color: lightgrey;
-}
-
-ul {
-     list-style-type: none;
-}
-
-.navCaption {
-    display: inline-block;
-    padding-left: 6px;
-}
