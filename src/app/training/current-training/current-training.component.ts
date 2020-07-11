@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { interval } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-current-training',
@@ -9,7 +10,15 @@ import { interval } from 'rxjs';
 export class CurrentTrainingComponent implements OnInit {
   public progress: number = 0;
 
+  private proIntSubscription: Subscription;
+
   ngOnInit() {
-    interval(1000).subscribe(() => this.progress += 5);
+    this.proIntSubscription = interval(1000).pipe(
+      takeWhile(() => this.progress < 100),
+    ).subscribe(() => this.progress += 5);
+  }
+  
+  public onStop(): void {
+    this.proIntSubscription.unsubscribe();
   }
 }
