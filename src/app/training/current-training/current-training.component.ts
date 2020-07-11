@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-current-training',
@@ -6,10 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./current-training.component.scss']
 })
 export class CurrentTrainingComponent implements OnInit {
+  public progress: number = 0;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  ngOnInit() {
+    interval(1000).subscribe(() => this.progress += 5);
   }
-
 }
