@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { StopTrainingComponent } from './stop-training.component';
 export class CurrentTrainingComponent implements OnInit {
   public progress: number = 0;
 
+  @Output() private trainingExit: EventEmitter<void> = new EventEmitter<void>();
   private proIntSubscription: Subscription;
 
   constructor(
@@ -20,16 +21,27 @@ export class CurrentTrainingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.startOrResumeTimer();
+  }
+  
+  private startOrResumeTimer(): void {
     this.proIntSubscription = interval(1000).pipe(
       takeWhile(() => this.progress < 100),
     ).subscribe(() => this.progress += 5);
   }
-  
+
   public onStop(): void {
     this.proIntSubscription.unsubscribe();
 
     const dialogRef: MatDialogRef<StopTrainingComponent> = this.dialog.open(StopTrainingComponent, { data: { progress: this.progress } });
 
-    dialogRef.afterClosed().subscribe((result: boolean) => console.log(result));
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.trainingExit.emit();
+        return;
+      } else {
+        this.startOrResumeTimer();
+      }
+    });
   }
 }
