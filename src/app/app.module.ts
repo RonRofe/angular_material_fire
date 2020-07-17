@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MaterialModule } from './material.module';
 import { SignupComponent } from './auth/signup/signup.component';
@@ -38,6 +38,7 @@ import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.c
     BrowserAnimationsModule,
     FormsModule,
     FlexLayoutModule,
+    ReactiveFormsModule,
 
     MaterialModule,
   ],
