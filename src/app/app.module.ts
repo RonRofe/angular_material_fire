@@ -18,6 +18,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.component';
 
+import { AuthService } from './auth/auth-service.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +44,7 @@ import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.c
 
     MaterialModule,
   ],
-  providers: [],
+  providers: [AuthService],
   entryComponents: [StopTrainingComponent],
   bootstrap: [AppComponent]
 })
