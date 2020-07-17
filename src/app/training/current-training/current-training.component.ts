@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { StopTrainingComponent } from './stop-training.component';
 
@@ -27,6 +27,9 @@ export class CurrentTrainingComponent implements OnInit {
   
   public onStop(): void {
     this.proIntSubscription.unsubscribe();
-    this.dialog.open(StopTrainingComponent);
+
+    const dialogRef: MatDialogRef<StopTrainingComponent> = this.dialog.open(StopTrainingComponent, { data: { progress: this.progress } });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => console.log(result));
   }
 }
