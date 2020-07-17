@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+
+import { StopTrainingComponent } from './stop-training.component';
 
 @Component({
   selector: 'app-current-training',
@@ -12,6 +15,10 @@ export class CurrentTrainingComponent implements OnInit {
 
   private proIntSubscription: Subscription;
 
+  constructor(
+    private dialog: MatDialog,
+  ) {}
+
   ngOnInit() {
     this.proIntSubscription = interval(1000).pipe(
       takeWhile(() => this.progress < 100),
@@ -20,5 +27,6 @@ export class CurrentTrainingComponent implements OnInit {
   
   public onStop(): void {
     this.proIntSubscription.unsubscribe();
+    this.dialog.open(StopTrainingComponent);
   }
 }
