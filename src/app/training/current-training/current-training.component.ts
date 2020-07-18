@@ -4,6 +4,7 @@ import { takeWhile } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { StopTrainingComponent } from './stop-training.component';
+import { TrainingService } from '../traning.service';
 
 @Component({
   selector: 'app-current-training',
@@ -18,6 +19,7 @@ export class CurrentTrainingComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    private trainingService: TrainingService,
   ) {}
 
   ngOnInit() {
@@ -25,9 +27,11 @@ export class CurrentTrainingComponent implements OnInit {
   }
   
   private startOrResumeTimer(): void {
-    this.proIntSubscription = interval(1000).pipe(
+    const step: number = this.trainingService.getRunningExercise().duration / 100 * 1000;
+    
+    this.proIntSubscription = interval(step).pipe(
       takeWhile(() => this.progress < 100),
-    ).subscribe(() => this.progress += 5);
+    ).subscribe(() => this.progress++);
   }
 
   public onStop(): void {

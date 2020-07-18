@@ -23,4 +23,8 @@ export class TrainingService {
     public getExerciseListener(): Observable<Exercise> {
         return this.exerciseChanged$.asObservable();
     }
+
+    public getRunningExercise(): Exercise {
+        return { ...this.runningExercise };
+    }
 }
