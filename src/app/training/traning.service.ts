@@ -46,4 +46,8 @@ export class TrainingService {
     public getRunningExercise(): Exercise {
         return { ...this.runningExercise };
     }
+
+    public getPastExercises(): Exercise[] {
+        return [ ...this.exercises ];
+    }
 }
