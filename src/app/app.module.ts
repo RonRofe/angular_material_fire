@@ -19,6 +19,7 @@ import { HeaderComponent } from './navigation/header/header.component';
 import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.component';
 
 import { AuthService } from './auth/auth-service.service';
+import { AuthGuard } from './auth/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,10 @@ import { AuthService } from './auth/auth-service.service';
 
     MaterialModule,
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    AuthGuard,
+  ],
   entryComponents: [StopTrainingComponent],
   bootstrap: [AppComponent]
 })

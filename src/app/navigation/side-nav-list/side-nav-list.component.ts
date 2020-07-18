@@ -35,4 +35,9 @@ export class SideNavListComponent implements OnInit, OnDestroy {
   public onClose(): void {
     this.closeSidenav.emit();
   }
+
+  public onLogout(): void {
+    this.onClose();
+    this.authService.logout();
+  }
 }
