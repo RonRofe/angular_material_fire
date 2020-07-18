@@ -4,5 +4,5 @@ export class Exercise {
     duration: number;
     calories: number;
     date?: Date;
-    state?: 'Completed' | 'Camceled';
+    state?: 'Completed' | 'Canceled';
 }

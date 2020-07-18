@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -14,7 +14,6 @@ import { TrainingService } from '../traning.service';
 export class CurrentTrainingComponent implements OnInit {
   public progress: number = 0;
 
-  @Output() private trainingExit: EventEmitter<void> = new EventEmitter<void>();
   private proIntSubscription: Subscription;
 
   constructor(
@@ -31,7 +30,11 @@ export class CurrentTrainingComponent implements OnInit {
     
     this.proIntSubscription = interval(step).pipe(
       takeWhile(() => this.progress < 100),
-    ).subscribe(() => this.progress++);
+    ).subscribe(
+      () => this.progress++,
+      null,
+      () => this.trainingService.complete(),
+    );
   }
 
   public onStop(): void {
@@ -41,7 +44,7 @@ export class CurrentTrainingComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.trainingExit.emit();
+        this.trainingService.cancel(this.progress);
         return;
       } else {
         this.startOrResumeTimer();

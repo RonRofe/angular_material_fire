@@ -10,14 +10,33 @@ export class TrainingService {
     ];
     private runningExercise: Exercise;
     private exerciseChanged$: Subject<Exercise> = new Subject<Exercise>();
+    private exercises: Exercise[] = [];
 
     public getAvailableExercises(): Exercise[] {
-        return [ ...this.availableExercises ];
+        return [...this.availableExercises];
     }
 
     public start(id: string): void {
         this.runningExercise = this.availableExercises.find((ex: Exercise) => ex.id === id);
         this.exerciseChanged$.next({ ...this.runningExercise });
+    }
+
+    public complete(): void {
+        this.exercises.push({ ...this.runningExercise, date: new Date(), state: 'Completed' });
+        this.runningExercise = null;
+        this.exerciseChanged$.next(null);
+    }
+
+    public cancel(progress: number): void {
+        this.exercises.push({
+            ...this.runningExercise,
+            date: new Date(),
+            state: 'Canceled',
+            duration: this.runningExercise.duration * (progress / 100),
+            calories: this.runningExercise.calories * (progress / 100),
+        });
+        this.runningExercise = null;
+        this.exerciseChanged$.next(null);
     }
 
     public getExerciseListener(): Observable<Exercise> {
