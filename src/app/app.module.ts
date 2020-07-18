@@ -6,7 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MaterialModule } from './material.module';
 import { SignupComponent } from './auth/signup/signup.component';
 import { LoginComponent } from './auth/login/login.component';
 import { TrainingComponent } from './training/training.component';
@@ -18,8 +17,12 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.component';
 
-import { AuthService } from './auth/auth-service.service';
 import { AuthGuard } from './auth/auth-guard.service';
+
+import { AuthService } from './auth/auth-service.service';
+import { TrainingService } from './training/traning.service';
+
+import { MaterialModule } from './material.module';
 
 @NgModule({
   declarations: [
@@ -48,6 +51,7 @@ import { AuthGuard } from './auth/auth-guard.service';
   providers: [
     AuthService,
     AuthGuard,
+    TrainingService,
   ],
   entryComponents: [StopTrainingComponent],
   bootstrap: [AppComponent]
