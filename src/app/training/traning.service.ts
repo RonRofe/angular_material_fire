@@ -36,13 +36,13 @@ export class TrainingService {
     }
 
     public complete(): void {
-        this.exercises.push({ ...this.runningExercise, date: new Date(), state: 'Completed' });
+        this.addDataToDb({ ...this.runningExercise, date: new Date(), state: 'Completed' });
         this.runningExercise = null;
         this.exerciseChanged$.next(null);
     }
 
     public cancel(progress: number): void {
-        this.exercises.push({
+        this.addDataToDb({
             ...this.runningExercise,
             date: new Date(),
             state: 'Canceled',
@@ -67,5 +67,9 @@ export class TrainingService {
 
     public getExercisesChangedListener(): Observable<Exercise[]> {
         return this.exercisesChanged$.asObservable();
+    }
+
+    private addDataToDb(exercise: Exercise): void {
+        this.db.collection('finished_exrcises').add(exercise);
     }
 }
