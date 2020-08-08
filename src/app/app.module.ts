@@ -5,6 +5,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 import { SignupComponent } from './auth/signup/signup.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -23,6 +25,7 @@ import { AuthService } from './auth/auth-service.service';
 import { TrainingService } from './training/traning.service';
 
 import { MaterialModule } from './material.module';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -45,6 +48,8 @@ import { MaterialModule } from './material.module';
     FormsModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
 
     MaterialModule,
   ],
