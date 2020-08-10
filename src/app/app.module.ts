@@ -6,14 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from 'angularfire2';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-
-import { TrainingComponent } from './training/training.component';
-import { CurrentTrainingComponent } from './training/current-training/current-training.component';
-import { StopTrainingComponent } from './training/current-training/stop-training.component';
-import { NewTrainingComponent } from './training/new-training/new-training.component';
-import { PastTrainingsComponent } from './training/past-trainings/past-trainings.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.component';
@@ -26,19 +18,15 @@ import { UIService } from './shared/ui.service';
 
 import { MaterialModule } from './material.module';
 import { AuthModule } from './auth/auth.module';
+import { TrainingModule } from './training/training.module';
 import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TrainingComponent,
-    CurrentTrainingComponent,
-    NewTrainingComponent,
-    PastTrainingsComponent,
     WelcomeComponent,
     HeaderComponent,
     SideNavListComponent,
-    StopTrainingComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,11 +36,10 @@ import { environment } from 'src/environments/environment';
     FlexLayoutModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
-    AngularFireAuthModule,
 
     MaterialModule,
     AuthModule,
+    TrainingModule,
   ],
   providers: [
     AuthService,
@@ -60,7 +47,6 @@ import { environment } from 'src/environments/environment';
     TrainingService,
     UIService,
   ],
-  entryComponents: [StopTrainingComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
