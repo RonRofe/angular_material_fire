@@ -24,6 +24,7 @@ import { AuthGuard } from './auth/auth-guard.service';
 
 import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/traning.service';
+import { UIService } from './shared/ui.service';
 
 import { MaterialModule } from './material.module';
 import { environment } from 'src/environments/environment';
@@ -59,6 +60,7 @@ import { environment } from 'src/environments/environment';
     AuthService,
     AuthGuard,
     TrainingService,
+    UIService,
   ],
   entryComponents: [StopTrainingComponent],
   bootstrap: [AppComponent]

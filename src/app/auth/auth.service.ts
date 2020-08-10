@@ -4,8 +4,10 @@ import { Subject, Observable, from } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AngularFireAuth } from 'angularfire2/auth';
 
-import { AuthData } from '../models/auth-data.model';
 import { TrainingService } from '../training/traning.service';
+import { UIService } from '../shared/ui.service';
+
+import { AuthData } from '../models/auth-data.model';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +19,7 @@ export class AuthService {
         private afAuth: AngularFireAuth,
         private trainingService: TrainingService,
         private snackbar: MatSnackBar,
+        private uiService: UIService,
     ) { }
 
     public initAuthListener(): void {
@@ -40,13 +43,27 @@ export class AuthService {
     }
 
     public registerUser(authData: AuthData): void {
-        from(this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password))
-            .subscribe(null, (error) => this.snackbar.open(error.message, null, { duration: 3000 }));
+        this.uiService.loadingState$.next(true);
+
+        from(this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)).subscribe(
+            () => this.uiService.loadingState$.next(false),
+            (error) => {
+                this.snackbar.open(error.message, null, { duration: 3000 });
+                this.uiService.loadingState$.next(false);
+            },
+        );
     }
 
     public login(authData: AuthData): void {
-        from(this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password))
-            .subscribe(null, (error) => this.snackbar.open(error.message, null, { duration: 3000 }));
+        this.uiService.loadingState$.next(true);
+
+        from(this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)).subscribe(
+                () => this.uiService.loadingState$.next(false),
+                ({ message }: { message: string }) => {
+                    this.snackbar.open(message, null, { duration: 3000 });
+                    this.uiService.loadingState$.next(false);
+                }
+            );
     }
 
     public logout(): void {

@@ -13,6 +13,7 @@ import { Exercise } from 'src/app/models/exercise.model';
 })
 export class NewTrainingComponent implements OnInit, OnDestroy {
   public exercises: Exercise[];
+  public isLoading: boolean = true;
 
   private subscriptions: Subscription[] = [];
 
@@ -22,7 +23,10 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.push(
-      this.trainingService.getExercisesChangedListener().subscribe((exs: Exercise[]) => this.exercises = exs),
+      this.trainingService.getExercisesChangedListener().subscribe((exs: Exercise[]) => {
+        this.exercises = exs;
+        this.isLoading  = false;
+      }),
     );
 
     this.trainingService.fetchAvailableExercises();
