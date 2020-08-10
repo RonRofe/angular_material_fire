@@ -18,37 +18,39 @@ export class AuthService {
         private trainingService: TrainingService,
     ) { }
 
+    public initAuthListener(): void {
+        this.afAuth.authState.subscribe(user => {
+            if (!user) {
+                this.trainingService.cancelSubscriptions();
+                this.isAuthenticated = false;
+                this.authChange.next(false);
+                this.router.navigate(['/login']);
+                return;
+            }
+
+            this.isAuthenticated = true;
+            this.authChange.next(true);
+            this.router.navigate(['/training']);
+        });
+    }
+
     public getAuthChangeListener(): Observable<boolean> {
         return this.authChange.asObservable();
     }
 
     public registerUser(authData: AuthData): void {
-        from(this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)).subscribe(
-            () => this.authSuccess(),
-        );
+        from(this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)).subscribe();
     }
-    
+
     public login(authData: AuthData): void {
-        from(this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)).subscribe(
-            () => this.authSuccess(),
-        );
+        from(this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)).subscribe();
     }
 
     public logout(): void {
-        this.trainingService.cancelSubscriptions();
         this.afAuth.auth.signOut();
-        this.isAuthenticated = false;
-        this.authChange.next(false);
-        this.router.navigate(['/login']);
-    }
-    
-    public isAuth(): boolean {
-        return this.isAuthenticated;
     }
 
-    private authSuccess(): void {
-        this.isAuthenticated = true;
-        this.authChange.next(true);
-        this.router.navigate(['/training']);
+    public isAuth(): boolean {
+        return this.isAuthenticated;
     }
 }
