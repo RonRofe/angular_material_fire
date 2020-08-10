@@ -9,8 +9,6 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 
-import { SignupComponent } from './auth/signup/signup.component';
-import { LoginComponent } from './auth/login/login.component';
 import { TrainingComponent } from './training/training.component';
 import { CurrentTrainingComponent } from './training/current-training/current-training.component';
 import { StopTrainingComponent } from './training/current-training/stop-training.component';
@@ -27,13 +25,12 @@ import { TrainingService } from './training/traning.service';
 import { UIService } from './shared/ui.service';
 
 import { MaterialModule } from './material.module';
+import { AuthModule } from './auth/auth.module';
 import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignupComponent,
-    LoginComponent,
     TrainingComponent,
     CurrentTrainingComponent,
     NewTrainingComponent,
@@ -55,6 +52,7 @@ import { environment } from 'src/environments/environment';
     AngularFireAuthModule,
 
     MaterialModule,
+    AuthModule,
   ],
   providers: [
     AuthService,
