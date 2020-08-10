@@ -3,6 +3,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '../shared/shared.module';
+import { AuthRoutingModule } from './auth-routing.module';
 
 import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from './login/login.component';
@@ -16,6 +17,8 @@ import { LoginComponent } from './login/login.component';
         ReactiveFormsModule,
         AngularFireAuthModule,
         SharedModule,
+
+        AuthRoutingModule,
     ],
 })
 export class AuthModule {}
