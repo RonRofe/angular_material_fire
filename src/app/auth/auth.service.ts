@@ -48,7 +48,7 @@ export class AuthService {
         from(this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)).subscribe(
             () => this.uiService.loadingState$.next(false),
             (error) => {
-                this.snackbar.open(error.message, null, { duration: 3000 });
+                this.uiService.showSnackBar(error.message, null, 3000);
                 this.uiService.loadingState$.next(false);
             },
         );
@@ -60,7 +60,7 @@ export class AuthService {
         from(this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)).subscribe(
                 () => this.uiService.loadingState$.next(false),
                 ({ message }: { message: string }) => {
-                    this.snackbar.open(message, null, { duration: 3000 });
+                    this.uiService.showSnackBar(message, null, 3000);
                     this.uiService.loadingState$.next(false);
                 }
             );
