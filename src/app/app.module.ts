@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { SignupComponent } from './auth/signup/signup.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -21,7 +22,7 @@ import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.c
 
 import { AuthGuard } from './auth/auth-guard.service';
 
-import { AuthService } from './auth/auth-service.service';
+import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/traning.service';
 
 import { MaterialModule } from './material.module';
@@ -50,6 +51,7 @@ import { environment } from 'src/environments/environment';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
+    AngularFireAuthModule,
 
     MaterialModule,
   ],
