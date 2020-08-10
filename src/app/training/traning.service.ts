@@ -1,5 +1,5 @@
 import { Exercise } from "../models/exercise.model";
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Injectable } from '@angular/core';
@@ -11,23 +11,29 @@ export class TrainingService {
     private exerciseChanged$: Subject<Exercise> = new Subject<Exercise>();
     private exercisesChanged$: Subject<Exercise[]> = new Subject<Exercise[]>();
     private finishedExsChanged$: Subject<Exercise[]> = new Subject<Exercise[]>();
+    private subscriptions: Subscription[] = [];
 
     constructor(
         private db: AngularFirestore,
     ) { }
 
     public fetchAvailableExercises(): void {
-        this.db.collection('available_exercises').snapshotChanges().pipe(
-            map((docArray: any[]) => docArray.map((document: any) => {
-                return {
-                    id: document.payload.doc.id,
-                    ...document.payload.doc.data(),
-                };
-            })),
-        ).subscribe((exs: Exercise[]) => {
-            this.availableExercises = exs;
-            this.exercisesChanged$.next([ ...exs ]);
-        });
+        this.subscriptions.push(
+            this.db.collection('available_exercises').snapshotChanges().pipe(
+                map((docArray: any[]) => docArray.map((document: any) => {
+                    return {
+                        id: document.payload.doc.id,
+                        ...document.payload.doc.data(),
+                    };
+                })),
+            ).subscribe(
+                (exs: Exercise[]) => {
+                    this.availableExercises = exs;
+                    this.exercisesChanged$.next([ ...exs ]);
+                },
+                () => {},
+            ),
+        );
     }
 
     public start(id: string): void {
@@ -63,8 +69,10 @@ export class TrainingService {
     }
 
     public fetchPastExercises(): void {
-        this.db.collection('finished_exercises').valueChanges().subscribe(
-            (exs: Exercise[]) => this.finishedExsChanged$.next(exs),
+        this.subscriptions.push(
+            this.db.collection('finished_exercises').valueChanges().subscribe(
+                (exs: Exercise[]) => this.finishedExsChanged$.next(exs),
+            ),
         );
     }
 
@@ -74,6 +82,12 @@ export class TrainingService {
 
     public getFinishedExsListener(): Observable<Exercise[]> {
         return this.finishedExsChanged$.asObservable();
+    }
+
+    public cancelSubscriptions(): void {
+        for (const sub of this.subscriptions) {
+            sub.unsubscribe();
+        }
     }
 
     private addDataToDb(exercise: Exercise): void {
