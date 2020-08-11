@@ -1,41 +1,43 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { AuthService } from '../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
+import * as fromApp from '../../app.reducer';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
-  public isLoading: boolean = false;
-
+  public isLoading$: Observable<boolean>;
+  
   private subscriptions: Subscription[] = [];
     
   constructor(
     private authService: AuthService,
     private uiService: UIService,
+    private store: Store<{ ui: fromApp.State }>,
   ) { }
 
   ngOnInit() {
+    this.isLoading$ = this.store.pipe(
+      map((state: ({ ui: fromApp.State })) => state.ui.isLoading),
+    );
+
     this.loginForm = new FormGroup({
       'email': new FormControl(null, { validators: [Validators.required, Validators.email] }),
       'password': new FormControl(null, { validators: [Validators.required] }),
     });
 
-    this.subscriptions.push(
-      this.uiService.loadingState$.subscribe((state: boolean) => this.isLoading = state),
-    );
-  }
-
-  ngOnDestroy() {
-    for (const sub of this.subscriptions) {
-      sub.unsubscribe();
-    }
+    // this.subscriptions.push(
+    //   this.uiService.loadingState$.subscribe((state: boolean) => this.isLoading = state),
+    // );
   }
 
   public onSubmit(): void {

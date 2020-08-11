@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, Observable, from } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../app.reducer';
 
 import { TrainingService } from '../training/traning.service';
 import { UIService } from '../shared/ui.service';
@@ -18,8 +19,8 @@ export class AuthService {
         private router: Router,
         private afAuth: AngularFireAuth,
         private trainingService: TrainingService,
-        private snackbar: MatSnackBar,
         private uiService: UIService,
+        private store: Store<{ ui: fromApp.State }>,
     ) { }
 
     public initAuthListener(): void {
@@ -43,27 +44,33 @@ export class AuthService {
     }
 
     public registerUser(authData: AuthData): void {
-        this.uiService.loadingState$.next(true);
+        // this.uiService.loadingState$.next(true);
+        this.store.dispatch({ type: 'START_LOADING' });
 
         from(this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)).subscribe(
-            () => this.uiService.loadingState$.next(false),
+            // () => this.uiService.loadingState$.next(false),
+            () => this.store.dispatch({ type: 'STOP_LOADING' }),
             (error) => {
                 this.uiService.showSnackBar(error.message, null, 3000);
-                this.uiService.loadingState$.next(false);
+                // this.uiService.loadingState$.next(false);
+                this.store.dispatch({ type: 'STOP_LOADING' });
             },
         );
     }
 
     public login(authData: AuthData): void {
-        this.uiService.loadingState$.next(true);
+        // this.uiService.loadingState$.next(true);
+        this.store.dispatch({ type: 'START_LOADING' });
 
         from(this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)).subscribe(
-                () => this.uiService.loadingState$.next(false),
-                ({ message }: { message: string }) => {
-                    this.uiService.showSnackBar(message, null, 3000);
-                    this.uiService.loadingState$.next(false);
-                }
-            );
+            // () => this.uiService.loadingState$.next(false),
+            () => this.store.dispatch({ type: 'STOP_LOADING' }),
+            ({ message }: { message: string }) => {
+                this.uiService.showSnackBar(message, null, 3000);
+                // this.uiService.loadingState$.next(false);
+                this.store.dispatch({ type: 'STOP_LOADING' });
+            }
+        );
     }
 
     public logout(): void {
