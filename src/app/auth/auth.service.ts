@@ -5,6 +5,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
+import * as Auth from './auth.actions';
 
 import { TrainingService } from '../training/traning.service';
 import { UIService } from '../shared/ui.service';
@@ -13,9 +14,6 @@ import { AuthData } from '../models/auth-data.model';
 
 @Injectable()
 export class AuthService {
-    private authChange: Subject<boolean> = new Subject<boolean>();
-    private isAuthenticated: boolean = false;
-
     constructor(
         private router: Router,
         private afAuth: AngularFireAuth,
@@ -27,21 +25,15 @@ export class AuthService {
     public initAuthListener(): void {
         this.afAuth.authState.subscribe(user => {
             if (!user) {
+                this.store.dispatch(new Auth.SetUnauth());
                 this.trainingService.cancelSubscriptions();
-                this.isAuthenticated = false;
-                this.authChange.next(false);
                 this.router.navigate(['/login']);
                 return;
             }
-
-            this.isAuthenticated = true;
-            this.authChange.next(true);
+            
+            this.store.dispatch(new Auth.SetAuth());
             this.router.navigate(['/training']);
         });
-    }
-
-    public getAuthChangeListener(): Observable<boolean> {
-        return this.authChange.asObservable();
     }
 
     public registerUser(authData: AuthData): void {
@@ -76,9 +68,5 @@ export class AuthService {
 
     public logout(): void {
         this.afAuth.auth.signOut();
-    }
-
-    public isAuth(): boolean {
-        return this.isAuthenticated;
     }
 }
