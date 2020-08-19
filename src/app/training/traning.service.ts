@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 
 import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
-import * as fromRoot from '../app.reducer';
+import * as Training from './training.actions';
+import * as fromTraining from './traning.reducer';
 import { Store } from '@ngrx/store';
 
 @Injectable()
@@ -21,7 +22,7 @@ export class TrainingService {
     constructor(
         private db: AngularFirestore,
         private uiService: UIService,
-        private store: Store<fromRoot.State>,
+        private store: Store<fromTraining.State>,
     ) { }
 
     public fetchAvailableExercises(): void {
@@ -38,8 +39,7 @@ export class TrainingService {
             ).subscribe(
                 (exs: Exercise[]) => {
                     this.store.dispatch(new UI.StopLoading());
-                    this.availableExercises = exs;
-                    this.exercisesChanged$.next([...exs]);
+                    this.store.dispatch(new Training.SetAvailableTrainings(exs));
                 },
                 () => {
                     this.uiService.showSnackBar('Fetching exercises failed, please try again later', null, 3000);
@@ -50,15 +50,13 @@ export class TrainingService {
     }
 
     public start(id: string): void {
-        // this.db.doc('available_exercises/' + id).update({ lastSelected: new Date() });
-        this.runningExercise = this.availableExercises.find((ex: Exercise) => ex.id === id);
-        this.exerciseChanged$.next({ ...this.runningExercise });
+        
+        this.store.dispatch(new Training.StartTraining(id));
     }
 
     public complete(): void {
         this.addDataToDb({ ...this.runningExercise, date: new Date(), state: 'Completed' });
-        this.runningExercise = null;
-        this.exerciseChanged$.next(null);
+        this.store.dispatch(new Training.StopTraining());
     }
 
     public cancel(progress: number): void {
@@ -69,8 +67,7 @@ export class TrainingService {
             duration: this.runningExercise.duration * (progress / 100),
             calories: this.runningExercise.calories * (progress / 100),
         });
-        this.runningExercise = null;
-        this.exerciseChanged$.next(null);
+        this.store.dispatch(new Training.StopTraining());
     }
 
     public getExerciseListener(): Observable<Exercise> {
@@ -84,7 +81,7 @@ export class TrainingService {
     public fetchPastExercises(): void {
         this.subscriptions.push(
             this.db.collection('finished_exercises').valueChanges().subscribe(
-                (exs: Exercise[]) => this.finishedExsChanged$.next(exs),
+                (exs: Exercise[]) => this.store.dispatch(new Training.SetFinishedTrainings(exs)),
             ),
         );
     }

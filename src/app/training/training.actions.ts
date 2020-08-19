@@ -26,7 +26,7 @@ export class StartTraining implements Action {
     public readonly type = START_TRAINING;
 
     constructor(
-        public payload: Exercise,
+        public payload: string,
     ) {}
 }
 
