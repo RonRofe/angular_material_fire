@@ -8,7 +8,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { StoreModule } from '@ngrx/store';
 
-import { appReducer } from './app.reducer';
+import { reducers } from './app.reducer';
 
 import { AuthGuard } from './auth/auth-guard.service';
 
@@ -39,7 +39,7 @@ import { SideNavListComponent } from './navigation/side-nav-list/side-nav-list.c
     FormsModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({ ui: appReducer }),
+    StoreModule.forRoot(reducers),
 
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
