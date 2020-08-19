@@ -56,6 +56,7 @@ export function trainingReducer(state: TrainingState = initialState, action: Tra
 
 export const getTrainingState = createFeatureSelector<TrainingState>('training');
 
-export const getAvailableTrainings = createSelector(getTrainingState, (state: TrainingState) => state.availableExercises);
+export const getAvailableExercises = createSelector(getTrainingState, (state: TrainingState) => state.availableExercises);
 export const getFinishedExercises = createSelector(getTrainingState, (state: TrainingState) => state.finishedExercises);
 export const getActiveTraining = createSelector(getTrainingState, (state: TrainingState) => state.activeTraining);
+export const getIsTraining = createSelector(getTrainingState, (state: TrainingState) => !!state.activeTraining);

@@ -11,7 +11,7 @@ import { StopTrainingComponent } from './current-training/stop-training.componen
 import { NewTrainingComponent } from './new-training/new-training.component';
 import { PastTrainingsComponent } from './past-trainings/past-trainings.component';
 
-import { trainingReducer } from './traning.reducer';
+import { trainingReducer } from './training.reducer';
 
 @NgModule({
     declarations: [

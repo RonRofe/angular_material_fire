@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { takeWhile, take } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
+import * as fromTraining from '../training.reducer';
 
 import { StopTrainingComponent } from './stop-training.component';
 import { TrainingService } from '../traning.service';
+import { Exercise } from 'src/app/models/exercise.model';
 
 @Component({
   selector: 'app-current-training',
@@ -19,22 +23,25 @@ export class CurrentTrainingComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private trainingService: TrainingService,
-  ) {}
+    private store: Store<fromTraining.State>,
+  ) { }
 
   ngOnInit() {
     this.startOrResumeTimer();
   }
-  
+
   private startOrResumeTimer(): void {
-    const step: number = this.trainingService.getRunningExercise().duration / 100 * 1000;
-    
-    this.proIntSubscription = interval(step).pipe(
-      takeWhile(() => this.progress < 100),
-    ).subscribe(
-      () => this.progress++,
-      null,
-      () => this.trainingService.complete(),
-    );
+    this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe((exercise: Exercise) => {
+      const step: number = exercise.duration / 100 * 1000;
+
+      this.proIntSubscription = interval(step).pipe(
+        takeWhile(() => this.progress < 100),
+      ).subscribe(
+        () => this.progress++,
+        null,
+        () => this.trainingService.complete(),
+      );
+    });
   }
 
   public onStop(): void {

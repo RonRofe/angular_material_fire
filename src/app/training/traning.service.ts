@@ -1,20 +1,18 @@
 import { Exercise } from "../models/exercise.model";
 import { Subject, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Injectable } from '@angular/core';
 
 import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
 import * as Training from './training.actions';
-import * as fromTraining from './traning.reducer';
+import * as fromTraining from './training.reducer';
 import { Store } from '@ngrx/store';
 
 @Injectable()
 export class TrainingService {
-    private availableExercises: Exercise[] = [];
     private runningExercise: Exercise;
-    private exerciseChanged$: Subject<Exercise> = new Subject<Exercise>();
     private exercisesChanged$: Subject<Exercise[]> = new Subject<Exercise[]>();
     private finishedExsChanged$: Subject<Exercise[]> = new Subject<Exercise[]>();
     private subscriptions: Subscription[] = [];
@@ -50,32 +48,28 @@ export class TrainingService {
     }
 
     public start(id: string): void {
-        
+
         this.store.dispatch(new Training.StartTraining(id));
     }
 
     public complete(): void {
-        this.addDataToDb({ ...this.runningExercise, date: new Date(), state: 'Completed' });
-        this.store.dispatch(new Training.StopTraining());
+        this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe((exercise: Exercise) => {
+            this.addDataToDb({ ...exercise, date: new Date(), state: 'Completed' });
+            this.store.dispatch(new Training.StopTraining());
+        });
     }
 
     public cancel(progress: number): void {
-        this.addDataToDb({
-            ...this.runningExercise,
-            date: new Date(),
-            state: 'Canceled',
-            duration: this.runningExercise.duration * (progress / 100),
-            calories: this.runningExercise.calories * (progress / 100),
+        this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe((exercise: Exercise) => {
+            this.addDataToDb({
+                ...exercise,
+                date: new Date(),
+                state: 'Canceled',
+                duration: exercise.duration * (progress / 100),
+                calories: exercise.calories * (progress / 100),
+            });
+            this.store.dispatch(new Training.StopTraining());
         });
-        this.store.dispatch(new Training.StopTraining());
-    }
-
-    public getExerciseListener(): Observable<Exercise> {
-        return this.exerciseChanged$.asObservable();
-    }
-
-    public getRunningExercise(): Exercise {
-        return { ...this.runningExercise };
     }
 
     public fetchPastExercises(): void {

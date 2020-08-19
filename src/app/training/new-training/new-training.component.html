@@ -3,9 +3,9 @@
         <mat-card fxFlex="400px" fxFlex.xs="100%">
             <mat-card-title fxLayout fxLayoutAlign="center">Time to start a workout!</mat-card-title>
             <mat-card-content fxLayout fxLayoutAlign="center">
-                <mat-form-field *ngIf="!(isLoading$ | async)">
+                <mat-form-field *ngIf="!(isLoading$ | async) && !!(exercises$ | async)">
                     <mat-select placeholder="Select Exercise" ngModel name="exercise" required>
-                        <mat-option *ngFor="let ex of exercises" [value]="ex.id">{{ ex.name }}</mat-option>
+                        <mat-option *ngFor="let ex of (exercises$ | async)" [value]="ex.id">{{ ex.name }}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
