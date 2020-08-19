@@ -12,9 +12,6 @@ import { Store } from '@ngrx/store';
 
 @Injectable()
 export class TrainingService {
-    private runningExercise: Exercise;
-    private exercisesChanged$: Subject<Exercise[]> = new Subject<Exercise[]>();
-    private finishedExsChanged$: Subject<Exercise[]> = new Subject<Exercise[]>();
     private subscriptions: Subscription[] = [];
 
     constructor(
@@ -79,15 +76,7 @@ export class TrainingService {
             ),
         );
     }
-
-    public getExercisesChangedListener(): Observable<Exercise[]> {
-        return this.exercisesChanged$.asObservable();
-    }
-
-    public getFinishedExsListener(): Observable<Exercise[]> {
-        return this.finishedExsChanged$.asObservable();
-    }
-
+    
     public cancelSubscriptions(): void {
         for (const sub of this.subscriptions) {
             sub.unsubscribe();
