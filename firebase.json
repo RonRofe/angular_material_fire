@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/angular-full-app",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
